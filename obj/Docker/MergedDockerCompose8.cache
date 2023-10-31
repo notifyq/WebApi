@@ -1,0 +1,57 @@
+name: dockercompose2156813757414708620
+services:
+  api:
+    build:
+      context: C:\Users\Дмитрий\Desktop\Api5
+      dockerfile: API/Dockerfile
+    depends_on:
+      db:
+        condition: service_started
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5000
+        published: "8080"
+        protocol: tcp
+      - mode: ingress
+        target: 5001
+        published: "5000"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\Дмитрий\AppData\Roaming/Microsoft/UserSecrets
+        target: /root/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\Дмитрий\AppData\Roaming/ASP.NET/Https
+        target: /root/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  db:
+    container_name: db-mysql
+    environment:
+      MYSQL_DATABASE: teamproject
+      MYSQL_PASSWORD: "12345678"
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+      MYSQL_ROOT_PASSWORD: "12345678"
+      MYSQL_USER: rootuser
+    image: mysql:8.0.34
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 3306
+        published: "9000"
+        protocol: tcp
+    restart: always
+networks:
+  default:
+    name: dockercompose2156813757414708620_default

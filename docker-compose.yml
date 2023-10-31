@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  db:
+    image: mysql:8.0.34
+    container_name: db-mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: teamproject
+      MYSQL_USER: rootuser
+      MYSQL_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 12345678
+    ports:
+       - 9000:3306
+    restart: always
+  
+  api:
+    depends_on:
+    - db
+
+    build:
+      context: .
+      dockerfile: API/Dockerfile
+    ports:
+       - 8080:5000
